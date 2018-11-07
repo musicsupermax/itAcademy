@@ -1,13 +1,25 @@
+
 package task1;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ThreadTask implements Runnable {
+
+    private static int startRange;
+    private static int endRange;
+    private static int threadsAmount;
+    static List<Integer> list = new ArrayList<>();
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int startRange = inputValue(scanner);
-        int endRange = inputValue(scanner);
-        int threadsAmount = inputValue(scanner);
+        startRange = inputValue(scanner);
+        endRange = inputValue(scanner);
+        threadsAmount = inputValue(scanner);
+
+        Thread thread1 = new Thread(new ThreadTask());
+        thread1.start();
     }
 
     public static int inputValue(Scanner sc) {
@@ -32,6 +44,13 @@ public class ThreadTask implements Runnable {
 
     @Override
     public void run() {
-
+        for (int number = startRange; number <= endRange; number++) {
+            if (isPrime(number)) {
+                list.add(number);
+            }
+        }
+        for (Integer list1 : list) {
+            System.out.println(list1);
+        }
     }
 }
