@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ThreadTask implements Runnable {
+public class ThreadsPrime implements Runnable {
 
     private static int startRange;
     private static int endRange;
     private static int threadsAmount;
+    private static int range;
     static List<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -18,10 +19,16 @@ public class ThreadTask implements Runnable {
         endRange = inputValue(scanner);
         threadsAmount = inputValue(scanner);
 
-        Thread thread1 = new Thread(new ThreadTask());
-        thread1.start();
-        for (Integer list1 : list) {
-            System.out.println(list1);
+        range = (endRange - startRange) / threadsAmount;
+
+        for (int count = 0; count < threadsAmount; count++) {
+            Thread thread = new Thread(new ThreadsPrime());
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -47,8 +54,11 @@ public class ThreadTask implements Runnable {
 
     @Override
     public void run() {
+        String currentName = Thread.currentThread().getName();
         for (int number = startRange; number <= endRange; number++) {
-            if (isPrime(number)) {
+            if (currentName.equals("Thread-0") && number < range && isPrime(number)) {
+                list.add(number);
+            } else if (currentName.equals("Thread-1") && range < number && isPrime(number)){
                 list.add(number);
             }
         }
