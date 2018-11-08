@@ -20,6 +20,9 @@ public class ThreadTask implements Runnable {
 
         Thread thread1 = new Thread(new ThreadTask());
         thread1.start();
+        for (Integer list1 : list) {
+            System.out.println(list1);
+        }
     }
 
     public static int inputValue(Scanner sc) {
@@ -48,9 +51,6 @@ public class ThreadTask implements Runnable {
             if (isPrime(number)) {
                 list.add(number);
             }
-        }
-        for (Integer list1 : list) {
-            System.out.println(list1);
         }
     }
 }
