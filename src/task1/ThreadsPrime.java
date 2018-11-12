@@ -7,10 +7,12 @@ import java.util.Scanner;
 
 public class ThreadsPrime implements Runnable {
 
+    private static boolean flag;
     private static int startRange;
     private static int endRange;
     private static int threadsAmount;
     private static int range;
+    private static int counter;
     static List<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -21,7 +23,7 @@ public class ThreadsPrime implements Runnable {
 
         range = (endRange - startRange) / threadsAmount;
 
-        for (int count = 0; count < threadsAmount; count++) {
+        for (counter = 0; counter < threadsAmount; counter++) {
             Thread thread = new Thread(new ThreadsPrime());
             thread.start();
             try {
@@ -30,6 +32,7 @@ public class ThreadsPrime implements Runnable {
                 e.printStackTrace();
             }
         }
+        System.out.println(list);
     }
 
     public static int inputValue(Scanner sc) {
@@ -54,13 +57,12 @@ public class ThreadsPrime implements Runnable {
 
     @Override
     public void run() {
-        String currentName = Thread.currentThread().getName();
-        for (int number = startRange; number <= endRange; number++) {
-            if (currentName.equals("Thread-0") && number < range && isPrime(number)) {
-                list.add(number);
-            } else if (currentName.equals("Thread-1") && range < number && isPrime(number)){
+        int i = 0;
+        for (int number = startRange; number <= range && number <= endRange; number++) {
+            if (isPrime(number)){
                 list.add(number);
             }
         }
+        range *= range;
     }
 }
