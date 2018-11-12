@@ -1,9 +1,11 @@
-
 package task1;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.*;
 
-public class ThreadsPrime implements Runnable {
+public class ThreadExecutors implements Callable<List> {
 
     private static int startRange;
     private static int endRange;
@@ -21,22 +23,17 @@ public class ThreadsPrime implements Runnable {
         range = ((endRange - startRange) / threadsAmount);
         rangeFinal = ++range;
 
-        Calendar calendar = new GregorianCalendar();
-        long start = calendar.getTimeInMillis();
+        ExecutorService executorService = Executors.newFixedThreadPool(threadsAmount);
         for (int counter = 0; counter < threadsAmount; counter++) {
-            Thread thread = new Thread(new ThreadsPrime());
-            thread.start();
+            Future<List> future = executorService.submit(new ThreadExecutors());
             try {
-                thread.join();
-            } catch (InterruptedException e) {
+                list.addAll(future.get());
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
+        executorService.shutdown();
         System.out.println(list);
-
-        Calendar calendar1 = new GregorianCalendar();
-        long end = calendar1.getTimeInMillis();
-        System.out.println(end - start);
     }
 
     public static int inputValue(Scanner sc) {
@@ -60,7 +57,7 @@ public class ThreadsPrime implements Runnable {
     }
 
     @Override
-    public void run() {
+    public List<Integer> call() {
         List<Integer> list2 = new ArrayList<>();
         for (int number = startRange; number <= range && number <= endRange; number++, startRange++) {
             if (isPrime(number)) {
@@ -68,6 +65,6 @@ public class ThreadsPrime implements Runnable {
             }
         }
         range += rangeFinal;
-        list.addAll(list2);
+        return list2;
     }
 }
