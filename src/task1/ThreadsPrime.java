@@ -1,19 +1,16 @@
 
 package task1;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ThreadsPrime implements Runnable {
 
-    private static boolean flag;
     private static int startRange;
     private static int endRange;
     private static int threadsAmount;
     private static int range;
-    private static int counter;
-    static List<Integer> list = new ArrayList<>();
+    private static int rangeFinal;
+    private static List<Integer> list = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -21,9 +18,12 @@ public class ThreadsPrime implements Runnable {
         endRange = inputValue(scanner);
         threadsAmount = inputValue(scanner);
 
-        range = (endRange - startRange) / threadsAmount;
+        range = ((endRange - startRange) / threadsAmount);
+        rangeFinal = ++range;
 
-        for (counter = 0; counter < threadsAmount; counter++) {
+        Calendar calendar = new GregorianCalendar();
+        long start = calendar.getTimeInMillis();
+        for (int counter = 0; counter < threadsAmount; counter++) {
             Thread thread = new Thread(new ThreadsPrime());
             thread.start();
             try {
@@ -32,8 +32,11 @@ public class ThreadsPrime implements Runnable {
                 e.printStackTrace();
             }
         }
-        flag = true;
         System.out.println(list);
+
+        Calendar calendar1 = new GregorianCalendar();
+        long end = calendar1.getTimeInMillis();
+        System.out.println(end - start);
     }
 
     public static int inputValue(Scanner sc) {
@@ -58,12 +61,13 @@ public class ThreadsPrime implements Runnable {
 
     @Override
     public void run() {
-        int i = 0;
-        for (int number = startRange; number <= range && number <= endRange; number++) {
-            if (isPrime(number)){
-                list.add(number);
+        List<Integer> list2 = new ArrayList<>();
+        for (int number = startRange; number <= range && number <= endRange; number++, startRange++) {
+            if (isPrime(number)) {
+                list2.add(number);
             }
         }
-        range *= range;
+        range += rangeFinal;
+        list.addAll(list2);
     }
 }
