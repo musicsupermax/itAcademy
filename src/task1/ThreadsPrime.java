@@ -32,6 +32,7 @@ public class ThreadsPrime implements Runnable {
                 e.printStackTrace();
             }
         }
+        flag = true;
         System.out.println(list);
     }
 
